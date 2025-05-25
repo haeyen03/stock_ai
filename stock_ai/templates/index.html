@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주식/암호화폐 가격 예측</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js 날짜 어댑터 (date-fns 사용 예시) -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <!-- date-fns 라이브러리 (어댑터에 필요) -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script> -->
+</head>
+<body>
+    <div class="container">
+        <h1><span id="stockSymbolTitle">ETH</span> 가격 예측</h1>
+        <div>
+            <label for="stockSelector">대상 선택:</label>
+            <select id="stockSelector">
+                <option value="ETH" selected>이더리움 (ETH)</option>
+                <option value="SAMSUNG_1Y">삼성전자 (1년)</option>
+                <option value="SAMSUNG_5Y">삼성전자 (5년)</option>
+                <option value="SAMSUNG_MAX">삼성전자 (최대)</option>
+                <option value="SAMSUNG_YTD">삼성전자 (연초대비)</option>
+            </select>
+        </div>
+        <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+
+        <div class="prediction-controls">
+            <h2>다음 거래일 데이터 입력 및 예측 시뮬레이션</h2>
+            <p>다음 거래일의 예상 시세를 입력하여 그 다음 날 예측을 확인해보세요. (날짜는 실제 마지막 데이터의 다음 거래일을 권장합니다)</p>
+            <form id="addDataForm">
+                <div>
+                    <label for="tradeDate">날짜 (YYYY-MM-DD):</label>
+                    <input type="date" id="tradeDate" required>
+                </div>
+                <div>
+                    <label for="openPrice">시가(Open):</label>
+                    <input type="number" id="openPrice" step="any" required placeholder="예: 300.00">
+                </div>
+                <div>
+                    <label for="highPrice">고가(High):</label>
+                    <input type="number" id="highPrice" step="any" required placeholder="예: 310.00">
+                </div>
+                <div>
+                    <label for="lowPrice">저가(Low):</label>
+                    <input type="number" id="lowPrice" step="any" required placeholder="예: 290.00">
+                </div>
+                <div>
+                    <label for="closePrice">종가(Close):</label>
+                    <input type="number" id="closePrice" step="any" required placeholder="예: 305.00">
+                </div>
+                
+                <div id="volumeInputDiv">
+                    <label for="volume">거래량(Volume):</label>
+                    <input type="text" id="volume" placeholder="예: 369583008 (ETH는 쉼표 포함 가능)">
+                </div>
+                <div id="adjCloseInputDiv" style="display:none;">
+                     <label for="adjClosePrice">수정종가(Adj Close):</label>
+                    <input type="number" id="adjClosePrice" step="any" placeholder="예: 41.27">
+                </div>
+                <div id="marketCapInputDiv">
+                    <label for="marketCap">시가총액(Market Cap):</label>
+                    <input type="text" id="marketCap" placeholder="예: 29331517440 (ETH는 쉼표 포함 가능)">
+                </div>
+                <button type="submit" id="addAndPredictBtn">데이터 추가 및 다음 날 예측</button>
+            </form>
+            <div id="addPredictionResult" class="result-box">
+                <!-- 예측 결과 표시 -->
+            </div>
+        </div>
+        <div id="loading" style="display: none;">처리 중...</div>
+        <div id="error-message" class="error-box" style="color: red;"></div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
